@@ -1,0 +1,76 @@
+/* Modal.css */
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #000000;
+}
+
+.modal {
+    background-color: rgb(255, 255, 255);
+    padding: 20px;
+    border-radius: 4px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    max-width: 400px;
+    text-align: center; /* Centrer le contenu */
+    position: relative; /* Ajout de positionnement relatif pour les boutons absolus */
+}
+
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    color: #555;
+}
+
+.close-button:hover {
+    color: #333;
+}
+
+.button-container {
+    position: absolute;
+    bottom: 20px; /* Placer les boutons en bas */
+    right: 20px; /* Placer les boutons à droite */
+}
+
+.confirm-button, .cancel-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+}
+
+.confirm-button {
+    background-color: #f44336;
+    color: #ffffff;
+    margin-left: 5px; /* Ajout de marge entre les boutons */
+}
+
+.confirm-button:hover {
+    background-color: #d32f2f;
+}
+
+.cancel-button {
+    background-color: #e0e0e0;
+    color: #000000;
+    margin-left: 5px; /* Ajout de marge entre les boutons */
+}
+
+.cancel-button:hover {
+    background-color: #bdbdbd;
+}
+
+.title{
+    margin-bottom: 60px;
+}

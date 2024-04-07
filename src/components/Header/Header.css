@@ -1,0 +1,8 @@
+.header {
+    background-color: #1d2226; /* Couleur de fond */
+    color: #fff; /* Couleur du texte */
+    display: flex; /* Utilisation de flexbox pour aligner les éléments */
+    justify-content: space-between; /* Alignement des éléments sur l'axe principal */
+    align-items: center; /* Alignement vertical des éléments */
+}
+

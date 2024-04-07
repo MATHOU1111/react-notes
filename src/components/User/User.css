@@ -1,0 +1,5 @@
+p {
+    width: fit-content; /* ajuste la largeur de l'élément à son contenu */
+    margin-left: auto;  /* décale l'élément vers la droite */
+    margin-right: 40px;
+}

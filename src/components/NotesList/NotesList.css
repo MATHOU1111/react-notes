@@ -1,0 +1,47 @@
+/* Dans votre fichier NotesList.css */
+
+.Note-button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.Note-button:hover {
+    background-color: #b1b1b1;
+}
+
+.Note-button-selected {
+    background-color: #808080;
+}
+
+.jolienote {
+    flex: 1;
+}
+
+.joliecontent{
+    font-size: 12px;
+    color: #818181;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.jolienote span {
+    display: block;
+    margin-bottom: 5px;
+}
+.icons {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.jolieTitle {
+    font-size: 14px;
+    font-weight: normal; /* Enlever le gras */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

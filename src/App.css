@@ -7,8 +7,22 @@
   background-color: rgb(29, 35, 39);
 }
 
+.Create-note-wrapper {
+  display: flex;
+  justify-content: space-between; /* Aligner les éléments de manière à ce qu'ils prennent toute la largeur */
+  align-items: center;
+}
+
+.icon {
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+}
+
+
+
 .Main {
-  height: 100vh;
+  height: 90vh;
   margin-inline-start: 240px;
 }
 
@@ -17,7 +31,9 @@
 }
 
 .Create-note-wrapper {
-  padding: 12px;
+  padding: 5px;
+  display: flex;
+  align-items: center;
 }
 
 .Note-button {
