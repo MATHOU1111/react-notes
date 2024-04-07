@@ -9,7 +9,7 @@
 
 .Create-note-wrapper {
   display: flex;
-  justify-content: space-between; /* Aligner les éléments de manière à ce qu'ils prennent toute la largeur */
+  justify-content: space-between;
   align-items: center;
 }
 
@@ -18,8 +18,6 @@
   height: 30px;
   cursor: pointer;
 }
-
-
 
 .Main {
   height: 90vh;
@@ -31,10 +29,19 @@
 }
 
 .Create-note-wrapper {
-  padding: 5px;
+  padding: 0px;
   display: flex;
   align-items: center;
 }
+
+.Create-note-title{
+    margin: 0px;
+    padding: 12px;
+    font-size: 1.5rem;
+    font-weight: bold;
+
+}
+
 
 .Note-button {
   display: block;

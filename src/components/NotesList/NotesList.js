@@ -1,6 +1,6 @@
 import {Loading} from "../Loading/Loading";
 import useDeleteRequest from "../../utils/hooks/useDeleteRequest";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import './NotesList.css';
 import {Button} from "../Button/Button";
 import Modal from "../Modal/Modal";
@@ -13,6 +13,7 @@ export function NotesList({notes, selectedNoteId, setSelectedNoteId, loading, se
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [noteToDelete, setNoteToDelete] = useState(null);
     const [pinnedNotes, setPinnedNotes] = useState([]);
+    const [isChecked, setIsChecked] = useState(false);
 
 
     // Ouverture de la modale
@@ -25,7 +26,7 @@ export function NotesList({notes, selectedNoteId, setSelectedNoteId, loading, se
     // Fermeture de la modale
     const handleCloseModal = () => {
         setIsModalOpen(false);
-        setNoteToDelete(null); // Réinitialiser l'ID de la note à supprimer
+        setNoteToDelete(null);
     };
 
 
@@ -34,6 +35,11 @@ export function NotesList({notes, selectedNoteId, setSelectedNoteId, loading, se
             await deleteNote(noteToDelete);
             handleCloseModal();
         }
+    };
+
+    // Gère le changement d'état de la checkbox
+    const handleCheckboxChange = (event) => {
+        setIsChecked(event.target.checked);
     };
 
     const deleteNote = async (id) => {
@@ -71,10 +77,16 @@ export function NotesList({notes, selectedNoteId, setSelectedNoteId, loading, se
                             key={note.id}
                             onClick={() => setSelectedNoteId(note.id)}
                         >
+                            <input
+                                type="checkbox"
+                                className="Note-Checkbox"
+                                onChange={handleCheckboxChange}
+                                checked={isChecked}
+                            />
                             <div className="jolienote">
-                                <span className="jolieTitle">{note.title}</span>
+                                <span className="jolieTitle">{note.title.substring(0, 15)}</span>
                                 <span
-                                    className="joliecontent">{note.content ? note.content.substring(0, 25) + "..." : ""}</span>
+                                    className="joliecontent">{note.content ? note.content.substring(0, 15) + "..." : ""}</span>
                             </div>
                             <img
                                 src={pinIcon}
