@@ -9,12 +9,20 @@ import pinIcon from "../../assets/pin.svg";
 
 export function NotesList({notes, selectedNoteId, setSelectedNoteId, loading, seeMoreNotes}) {
     const {deleteData} = useDeleteRequest("notes");
-    const [notesList, setNotesList] = useState(notes);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [noteToDelete, setNoteToDelete] = useState(null);
-    const [pinnedNotes, setPinnedNotes] = useState([]);
-    const [isChecked, setIsChecked] = useState(false);
+    const [searchTerm, setSearchTerm] = useState(""); // État pour stocker le terme de recherche
 
+    // Fonction pour filtrer les notes en fonction du terme de recherche
+    const filteredNotes = notes.filter(note =>
+        note.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (note.content && note.content.toLowerCase().includes(searchTerm.toLowerCase()))
+    );
+
+    // Fonction de recherche à appeler lorsque le terme de recherche change
+    const handleSearchChange = (event) => {
+        setSearchTerm(event.target.value);
+    };
 
     // Ouverture de la modale
     const handleOpenModal = (id) => {
@@ -37,19 +45,13 @@ export function NotesList({notes, selectedNoteId, setSelectedNoteId, loading, se
         }
     };
 
-    // Gère le changement d'état de la checkbox
-    const handleCheckboxChange = (event) => {
-        setIsChecked(event.target.checked);
-    };
 
     const deleteNote = async (id) => {
         try {
             const success = await deleteData(id);
 
             if (success) {
-                const updatedNotes = notesList.filter((note) => note.id !== id);
-                setNotesList(updatedNotes);
-                setSelectedNoteId(updatedNotes.length > 0 ? updatedNotes[0].id : null);
+                setSelectedNoteId(null); // Désélectionne la note supprimée si elle était sélectionnée
             } else {
                 console.error("La suppression de la note a échoué.");
             }
@@ -57,11 +59,6 @@ export function NotesList({notes, selectedNoteId, setSelectedNoteId, loading, se
             console.error("Une erreur s'est produite lors de la suppression de la note :", error);
         }
     };
-
-    useEffect(() => {
-        setNotesList(notes);
-        console.log(notes);
-    }, [notes]);
 
     return (
         <>
@@ -71,20 +68,26 @@ export function NotesList({notes, selectedNoteId, setSelectedNoteId, loading, se
                 </div>
             ) : (
                 <>
-                    {notesList?.map((note) => (
+                    <input
+                        type="text"
+                        placeholder="Rechercher..."
+                        onChange={handleSearchChange}
+                    />
+                    {filteredNotes.map((note) => (
                         <div
                             className={`Note-button ${selectedNoteId === note.id ? "Note-button-selected" : ""}`}
                             key={note.id}
                             onClick={() => setSelectedNoteId(note.id)}
                         >
-                            <input
-                                type="checkbox"
-                                className="Note-Checkbox"
-                                onChange={handleCheckboxChange}
-                                checked={isChecked}
-                            />
                             <div className="jolienote">
-                                <span className="jolieTitle">{note.title.substring(0, 15)}</span>
+                                <div>
+                                    {note.title && <span className="jolieTitle">{note.title.substring(0, 15)}</span>}
+                                    <div className="Note-tags">
+                                        {note.tags && note.tags.map((tag, index) => (
+                                            <span key={index} className="Tag">{tag.value}</span>
+                                        ))}
+                                    </div>
+                                </div>
                                 <span
                                     className="joliecontent">{note.content ? note.content.substring(0, 15) + "..." : ""}</span>
                             </div>

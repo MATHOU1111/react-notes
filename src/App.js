@@ -13,7 +13,7 @@ function App() {
     const [selectedNoteId, setSelectedNoteId] = useState(null);
     const { postData} = usePostRequest("/notes", []);
     const [notesPage , setNotesPages] = useState(1);
-    const {data, isLoading, error} = useGetRequest(`/notes?_page=${notesPage}&_limit=10`);
+    const {data, isLoading} = useGetRequest(`/notes?_page=${notesPage}&_limit=10`);
 
 
     useEffect(() => {
@@ -26,7 +26,7 @@ function App() {
 
     const createNote = async () => {
         try {
-            const responseData = await postData({title: "Nouvelle note", content: "", lastUpdatedAt: new Date(), checked: false});
+            const responseData = await postData({title: "Nouvelle note",content: "",lastUpdatedAt: new Date().toISOString(), checked: false, tags : [] });
             if (responseData) {
                 setNotes((prevNotes) => [responseData, ...prevNotes]);
                 setSelectedNoteId(responseData.id);
@@ -39,25 +39,22 @@ function App() {
     };
 ;
 
-    const refreshNote = (id, title, content) => {
-        // Trouver la note à mettre à jour
+    const refreshNote = (id, title, content, checked, tags) => {
+        console.log("je suis appelé.");
         const updatedNoteIndex = notes.findIndex(note => note.id === id);
+
         if (updatedNoteIndex !== -1) {
-            // Construire la note mise à jour
-            const updatedNote = { ...notes[updatedNoteIndex], title, content, lastUpdatedAt: new Date().toISOString() };
+            const updatedNote = { ...notes[updatedNoteIndex], title, content, lastUpdatedAt: new Date().toISOString(), checked, tags };
 
-            // Créer une nouvelle liste de notes sans la note mise à jour
-            const newNotesList = notes.filter(note => note.id !== id);
-
-            // Ajouter la note mise à jour au début de la liste de notes
-            setNotes([updatedNote, ...newNotesList]);
+            const updatedNotes = [...notes];
+            updatedNotes[updatedNoteIndex] = updatedNote;
 
             // Trier les notes par lastUpdatedAt en ordre décroissant
-            setNotes(prevNotes => prevNotes.sort((a, b) => new Date(b.lastUpdatedAt) - new Date(a.lastUpdatedAt)));
+            updatedNotes.sort((a, b) => new Date(b.lastUpdatedAt) - new Date(a.lastUpdatedAt));
+
+            setNotes(updatedNotes);
         }
     };
-
-
 
     const seeMoreNotes = async () => {
         try {
@@ -106,6 +103,7 @@ function App() {
                     <Note
                         Note={selectedNote}
                         onBlur={refreshNote}
+                        refreshNote={refreshNote}
                     />
                 ) : null}
             </main>
