@@ -34,3 +34,12 @@
 img{
     margin: 5px;
 }
+
+.search-bar-clear {
+    font-size: 15px;
+    color: #ffffff; /* Couleur du texte du bouton */
+    cursor: pointer;
+    border:none;
+    background-color: transparent; /* Définir le background comme transparent */
+}
+

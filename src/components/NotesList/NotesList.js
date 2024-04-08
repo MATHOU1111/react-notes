@@ -1,11 +1,12 @@
 import {Loading} from "../Loading/Loading";
 import useDeleteRequest from "../../utils/hooks/useDeleteRequest";
-import React, {useEffect, useState} from "react";
+import React, { useState} from "react";
 import './NotesList.css';
 import {Button} from "../Button/Button";
 import Modal from "../Modal/Modal";
 import deleteIcon from "../../assets/delete.svg";
 import pinIcon from "../../assets/pin.svg";
+import SearchBar from "../SearchBar/SearchBar";
 
 export function NotesList({notes, selectedNoteId, setSelectedNoteId, loading, seeMoreNotes}) {
     const {deleteData} = useDeleteRequest("notes");
@@ -13,11 +14,12 @@ export function NotesList({notes, selectedNoteId, setSelectedNoteId, loading, se
     const [noteToDelete, setNoteToDelete] = useState(null);
     const [searchTerm, setSearchTerm] = useState(""); // État pour stocker le terme de recherche
 
-    // Fonction pour filtrer les notes en fonction du terme de recherche
-    const filteredNotes = notes.filter(note =>
+
+
+    const filteredNotes = notes?.filter(note =>
         note.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         (note.content && note.content.toLowerCase().includes(searchTerm.toLowerCase()))
-    );
+    ) ?? [];
 
     // Fonction de recherche à appeler lorsque le terme de recherche change
     const handleSearchChange = (event) => {
@@ -68,11 +70,7 @@ export function NotesList({notes, selectedNoteId, setSelectedNoteId, loading, se
                 </div>
             ) : (
                 <>
-                    <input
-                        type="text"
-                        placeholder="Rechercher..."
-                        onChange={handleSearchChange}
-                    />
+                    <SearchBar onSearch={handleSearchChange} onChange={handleSearchChange} searchTerm={searchTerm} />
                     {filteredNotes.map((note) => (
                         <div
                             className={`Note-button ${selectedNoteId === note.id ? "Note-button-selected" : ""}`}

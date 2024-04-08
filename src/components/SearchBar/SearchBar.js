@@ -1,13 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './SearchBar.css';
 import searchBarIcon from '../../assets/searchIcon.svg';
 
-function SearchBar({ onSearch }) {
-    const [searchTerm, setSearchTerm] = useState('');
+function SearchBar({ onSearch , onChange , searchTerm }) {
 
-    const handleChange = (event) => {
-        setSearchTerm(event.target.value);
-    };
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -21,9 +17,18 @@ function SearchBar({ onSearch }) {
                 className="search-bar-input"
                 type="text"
                 value={searchTerm}
-                onChange={handleChange}
+                onChange={onChange}
                 placeholder="Rechercher .."
             />
+            {searchTerm ? (
+                    <span
+                        className="search-bar-clear"
+                        onClick={() => onChange({target: {value: ""}})}
+                    >
+                        X
+                    </span>
+
+            ) : null}
         </form>
     );
 }

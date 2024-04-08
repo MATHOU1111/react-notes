@@ -1,6 +1,5 @@
 import "./App.css";
 import {useEffect, useState} from "react";
-import SearchBar from './components/SearchBar/SearchBar';
 import {NotesList} from "./components/NotesList/NotesList";
 import {Note} from "./components/Note/Note";
 import usePostRequest from "./utils/hooks/usePostRequest";
@@ -89,7 +88,7 @@ function App() {
                         style={{cursor: 'pointer'}}
                     />
                 </div>
-                <SearchBar/>
+
                 <NotesList
                     notes={notes}
                     selectedNoteId={selectedNoteId}
