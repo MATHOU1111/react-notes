@@ -90,8 +90,7 @@ export function Note({Note, onBlur, refreshNote, setErrorModalOpen}) {
     };
 
     const toggleMarkdown = (event) => {
-        event.preventDefault(); // Empêcher le rechargement de la page
-        setMarkdownEnabled(!markdownEnabled);
+        setMarkdownEnabled(event.target.checked);
     };
 
     const options = {year: "numeric", month: "2-digit", day: "2-digit", hour: "numeric", minute: "numeric",};
@@ -131,7 +130,15 @@ export function Note({Note, onBlur, refreshNote, setErrorModalOpen}) {
                     ))}
             </div>
             <div>
-                <button onClick={toggleMarkdown}>Activer Markdown</button>
+                <label className="switch">
+                    <input
+                        type="checkbox"
+                        checked={markdownEnabled}
+                        onChange={toggleMarkdown}
+                    />
+                    <span className="slider round"></span>
+                </label>
+                <span> Activer Markdown</span>
             </div>
             <Divider/>
             {markdownEnabled ? (

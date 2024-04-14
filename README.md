@@ -26,18 +26,26 @@ Set initial `db.json`, for instance :
 {
   "notes": [
     {
-      "id": "1",
-      "title": "React",
-      "content": "Bibliothèque de création d'interfaces réactives."
+      "title": "Nouvelle note",
+      "content": "",
+      "lastUpdatedAt": "2024-04-05T13:27:23.186Z",
+      "id": 68
     },
     {
-      "id": "2",
-      "title": "Node.js",
-      "content": "Environnement d'exécution JavaScript."
+      "title": "Nouvelle note",
+      "content": "",
+      "lastUpdatedAt": "2024-04-05T13:27:23.498Z",
+      "id": 69
+    },
+    {
+      "title": "Nouvelle note",
+      "content": "",
+      "lastUpdatedAt": "2024-04-05T13:27:23.622Z",
+      "id": 70
     }
   ],
   "profile": {
-    "name": "Arnaud"
+    "name": "Mathis"
   }
 }
 ```

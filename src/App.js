@@ -90,12 +90,6 @@ function App() {
                 <>
                     <aside className="Side">
                         <div className="Create-note-wrapper">
-                            <img
-                                src={createNoteIcon}
-                                alt="create"
-                                className="icon"
-                                style={{cursor: 'pointer'}}
-                            />
                             <h2 className="Create-note-title">Notes</h2>
                             <img
                                 src={createNoteIcon}
