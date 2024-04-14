@@ -37,6 +37,12 @@
     cursor: pointer;
 }
 
+.note-checked .jolieTitle,
+.note-checked .joliecontent {
+    text-decoration: line-through;
+}
+
+
 .jolieTitle {
     font-size: 14px;
     font-weight: normal;

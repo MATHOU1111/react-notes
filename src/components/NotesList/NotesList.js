@@ -1,6 +1,6 @@
 import {Loading} from "../Loading/Loading";
 import useDeleteRequest from "../../utils/hooks/useDeleteRequest";
-import React, { useState} from "react";
+import React, { useState, useEffect} from "react";
 import './NotesList.css';
 import {Button} from "../Button/Button";
 import Modal from "../Modal/Modal";
@@ -8,13 +8,39 @@ import deleteIcon from "../../assets/delete.svg";
 import pinIcon from "../../assets/pin.svg";
 import SearchBar from "../SearchBar/SearchBar";
 
-export function NotesList({notes, selectedNoteId, setSelectedNoteId, loading, seeMoreNotes}) {
+export function NotesList({ notes, selectedNoteId, setSelectedNoteId, loading, seeMoreNotes, setErrorModalOpen }) {
     const {deleteData} = useDeleteRequest("notes");
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [noteToDelete, setNoteToDelete] = useState(null);
-    const [searchTerm, setSearchTerm] = useState(""); // État pour stocker le terme de recherche
+    const [searchTerm, setSearchTerm] = useState("");
+    const [pinnedNotes, setPinnedNotes] = useState([]);
+    const [hoveredNote, setHoveredNote] = useState(null);
 
+    useEffect(() => {
+        const pinnedNotes = JSON.parse(localStorage.getItem("pinnedNotes")) || [];
+        setPinnedNotes(pinnedNotes);
+    }, []);
 
+    // Fonction pour épingler/désépingler une note
+    const togglePinNote = (id) => {
+        const updatedPinnedNotes = [...pinnedNotes];
+        const noteIndex = updatedPinnedNotes.indexOf(id);
+        if (noteIndex !== -1) {
+            updatedPinnedNotes.splice(noteIndex, 1); // Si déjà épinglée, la désépingler
+        } else {
+            updatedPinnedNotes.push(id); // Sinon, l'épingler
+        }
+        setPinnedNotes(updatedPinnedNotes);
+        localStorage.setItem("pinnedNotes", JSON.stringify(updatedPinnedNotes));
+    };
+
+    const handleMouseEnter = (id) => {
+        setHoveredNote(id);
+    };
+
+    const handleMouseLeave = () => {
+        setHoveredNote(null);
+    };
 
     const filteredNotes = notes?.filter(note =>
         note.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -56,8 +82,10 @@ export function NotesList({notes, selectedNoteId, setSelectedNoteId, loading, se
                 setSelectedNoteId(null); // Désélectionne la note supprimée si elle était sélectionnée
             } else {
                 console.error("La suppression de la note a échoué.");
+                setErrorModalOpen(true);
             }
         } catch (error) {
+            setErrorModalOpen(true);
             console.error("Une erreur s'est produite lors de la suppression de la note :", error);
         }
     };
@@ -66,18 +94,24 @@ export function NotesList({notes, selectedNoteId, setSelectedNoteId, loading, se
         <>
             {loading ? (
                 <div className="Loading-wrapper">
-                    <Loading/>
+                    <Loading />
                 </div>
             ) : (
                 <>
                     <SearchBar onSearch={handleSearchChange} onChange={handleSearchChange} searchTerm={searchTerm} />
-                    {filteredNotes.map((note) => (
+
+                    {[
+                        ...filteredNotes.filter(note => pinnedNotes.includes(note.id)),
+                        ...filteredNotes.filter(note => !pinnedNotes.includes(note.id))
+                    ].map((note) => (
                         <div
                             className={`Note-button ${selectedNoteId === note.id ? "Note-button-selected" : ""}`}
                             key={note.id}
                             onClick={() => setSelectedNoteId(note.id)}
+                            onMouseEnter={() => handleMouseEnter(note.id)}
+                            onMouseLeave={handleMouseLeave}
                         >
-                            <div className="jolienote">
+                            <div className={`jolienote ${note.checked ? "note-checked" : ""}`}>
                                 <div>
                                     {note.title && <span className="jolieTitle">{note.title.substring(0, 15)}</span>}
                                     <div className="Note-tags">
@@ -86,19 +120,22 @@ export function NotesList({notes, selectedNoteId, setSelectedNoteId, loading, se
                                         ))}
                                     </div>
                                 </div>
-                                <span
-                                    className="joliecontent">{note.content ? note.content.substring(0, 15) + "..." : ""}</span>
+                                <span className="joliecontent">{note.content ? note.content.substring(0, 15) + "..." : ""}</span>
                             </div>
-                            <img
-                                src={pinIcon}
-                                alt="Pin"
-                                className="icons"
-                                onClick={(event) => {
-                                    event.stopPropagation();
-                                    console.log("Pinned note with ID", note.id + "Pine ta mere !");
-                                }}
-                                style={{cursor: 'pointer'}}
-                            />
+
+                            {(hoveredNote === note.id || pinnedNotes.includes(note.id)) && (
+                                <img
+                                    src={pinIcon}
+                                    alt="Pin"
+                                    className="icons"
+                                    onClick={(event) => {
+                                        event.stopPropagation();
+                                        togglePinNote(note.id);
+                                    }}
+                                    style={{ cursor: 'pointer' }}
+                                />
+                            )}
+
                             <img
                                 src={deleteIcon}
                                 alt="Delete"
@@ -107,10 +144,11 @@ export function NotesList({notes, selectedNoteId, setSelectedNoteId, loading, se
                                     event.stopPropagation();
                                     handleOpenModal(note.id);
                                 }}
-                                style={{cursor: 'pointer'}}
+                                style={{ cursor: 'pointer' }}
                             />
                         </div>
                     ))}
+
                     <Button onClick={seeMoreNotes}>Voir plus de notes</Button>
 
                     <Modal
@@ -119,6 +157,7 @@ export function NotesList({notes, selectedNoteId, setSelectedNoteId, loading, se
                         confirmDeleteNote={confirmDeleteNote}
                         title={"Etes vous sûre de vouloir supprimer cette note ?"}
                         secondTitle={"Cette action est irréversible ! "}
+                        buttons={['delete']}
                     />
                 </>
             )}

@@ -63,3 +63,14 @@
 .Note-button:hover {
   background: rgb(60, 60, 60);
 }
+
+
+.error-message {
+  background-color: #ffcccc;
+  color: #ff0000;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  border: 1px solid #ff0000;
+  text-align: center;
+}

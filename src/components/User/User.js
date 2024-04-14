@@ -21,7 +21,7 @@ export function User() {
                     <Loading/>
                 </div>
             ) : error ? (
-                <p>Erreur dans le chargement de l'utilisateur.</p>
+                <p>☠ Erreur dans le chargement de l'utilisateur. ☠</p>
             ) : (
                 <p>{user}</p>
             )}

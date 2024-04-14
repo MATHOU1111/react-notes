@@ -1,8 +1,9 @@
 import './Modal.css';
 
-function Modal({isOpen, onClose, confirmDeleteNote, title, secondTitle}) {
+function Modal({ isOpen, onClose, confirmDeleteNote, title, secondTitle, buttons }) {
     if (!isOpen) return null;
 
+    const showDeleteButton = buttons && buttons.includes('delete');
 
     return (
         <div className="modal-overlay">
@@ -13,8 +14,10 @@ function Modal({isOpen, onClose, confirmDeleteNote, title, secondTitle}) {
                     {secondTitle}
                 </div>
                 <div className="button-container">
-                    <button className="confirm-button" onClick={confirmDeleteNote}>Supprimer</button>
-                    <button className="cancel-button" onClick={onClose}>Annuler</button>
+                    {showDeleteButton && (
+                        <button className="confirm-button" onClick={confirmDeleteNote}>Supprimer</button>
+                    )}
+                    <button className="cancel-button" onClick={onClose}>Fermer</button>
                 </div>
             </div>
         </div>
