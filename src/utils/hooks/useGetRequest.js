@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 
+// hook pour les requêtes GET
 export function useGetRequest(url) {
     const [data, setData] = useState(null);
     const [isLoading, setLoading] = useState(true);

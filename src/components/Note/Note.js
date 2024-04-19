@@ -15,8 +15,11 @@ export function Note({Note, onBlur, refreshNote, setErrorModalOpen}) {
     const [loading, setLoading] = useState(null);
     const [markdownEnabled, setMarkdownEnabled] = useState(false); // State pour suivre si le Markdown est activé
 
+    // On appelle le hook pour la modification des requêtes en PUT
     const {putData} = usePutRequest();
 
+
+    // A chaque fois qu'on change de note on vient refresh les données via un useEffect avec dépendance Note
     useEffect(() => {
         setTitle(Note.title);
         setContent(Note.content);
@@ -28,6 +31,8 @@ export function Note({Note, onBlur, refreshNote, setErrorModalOpen}) {
         setTags(Note.tags);
     }, [Note]);
 
+
+    // Update de la note côté serveur
     const updateNote = async () => {
         setLoading(true);
         try {
@@ -46,22 +51,24 @@ export function Note({Note, onBlur, refreshNote, setErrorModalOpen}) {
         }
     };
 
+    // Fonction pour gérer le changement de titre
     const handleTitleChange = (event) => {
         setLoading(null);
         setTitle(event.target.value);
     };
-
+    // Fonction pour gérer le changement de content
     const handleContentChange = (event) => {
         setLoading(null);
         setContent(event.target.value);
     };
-
+    // Lorsque l'utilisateur déselectionne les inputs ça enregistre automatiquement aulieu de cliquer sur un bouton
     const handleBlur = (event) => {
         onBlur(Note.id, title, content, checked, tags);
         event.preventDefault();
         updateNote();
     };
 
+    // fonction pour supprimer les tags
     const handleRemoveTag = (tagIdToRemove) => {
         const updatedTags = tags.filter((tag) => tag.id !== tagIdToRemove);
         setTags(updatedTags);
@@ -69,6 +76,8 @@ export function Note({Note, onBlur, refreshNote, setErrorModalOpen}) {
         updateNote();
     };
 
+
+    // Fonction pour ajouter des tags, lorsqu'on appuie sur espace ça ajoute à la liste
     const handleTagInput = (event) => {
         if (event.key === " ") {
             const newTag = {
@@ -89,10 +98,12 @@ export function Note({Note, onBlur, refreshNote, setErrorModalOpen}) {
         updateNote();
     };
 
+    // Bouton pour gérer le markdown on/off
     const toggleMarkdown = (event) => {
         setMarkdownEnabled(event.target.checked);
     };
 
+    // On vient formater la date au bon format pour l'afficher
     const options = {year: "numeric", month: "2-digit", day: "2-digit", hour: "numeric", minute: "numeric",};
     const formattedLastUpdatedAt = new Date(Note.lastUpdatedAt).toLocaleString("fr-FR", options);
 

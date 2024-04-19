@@ -8,7 +8,7 @@ import deleteIcon from "../../assets/delete.svg";
 import pinIcon from "../../assets/pin.svg";
 import SearchBar from "../SearchBar/SearchBar";
 
-export function NotesList({ notes, selectedNoteId, setSelectedNoteId, loading, seeMoreNotes, setErrorModalOpen }) {
+export function NotesList({ notes, selectedNoteId, setSelectedNoteId, loading, seeMoreNotes, setErrorModalOpen, updateNotes }) {
     const {deleteData} = useDeleteRequest("notes");
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [noteToDelete, setNoteToDelete] = useState(null);
@@ -16,6 +16,8 @@ export function NotesList({ notes, selectedNoteId, setSelectedNoteId, loading, s
     const [pinnedNotes, setPinnedNotes] = useState([]);
     const [hoveredNote, setHoveredNote] = useState(null);
 
+
+    // Gérer les notes pinned, j'ai mis dans le localStorage j'aurais pu faire côté serveur mais j'ai préféré le faire côté client
     useEffect(() => {
         const pinnedNotes = JSON.parse(localStorage.getItem("pinnedNotes")) || [];
         setPinnedNotes(pinnedNotes);
@@ -26,14 +28,15 @@ export function NotesList({ notes, selectedNoteId, setSelectedNoteId, loading, s
         const updatedPinnedNotes = [...pinnedNotes];
         const noteIndex = updatedPinnedNotes.indexOf(id);
         if (noteIndex !== -1) {
-            updatedPinnedNotes.splice(noteIndex, 1); // Si déjà épinglée, la désépingler
+            updatedPinnedNotes.splice(noteIndex, 1);
         } else {
-            updatedPinnedNotes.push(id); // Sinon, l'épingler
+            updatedPinnedNotes.push(id);
         }
         setPinnedNotes(updatedPinnedNotes);
         localStorage.setItem("pinnedNotes", JSON.stringify(updatedPinnedNotes));
     };
 
+    // pour gérer l'affichage du pin quand on passe sa souris sur les notes
     const handleMouseEnter = (id) => {
         setHoveredNote(id);
     };
@@ -42,6 +45,7 @@ export function NotesList({ notes, selectedNoteId, setSelectedNoteId, loading, s
         setHoveredNote(null);
     };
 
+    // Filtrer les notes en fonction du terme de recherche
     const filteredNotes = notes?.filter(note =>
         note.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         (note.content && note.content.toLowerCase().includes(searchTerm.toLowerCase()))
@@ -71,15 +75,17 @@ export function NotesList({ notes, selectedNoteId, setSelectedNoteId, loading, s
             await deleteNote(noteToDelete);
             handleCloseModal();
         }
-    };
 
+    };
 
     const deleteNote = async (id) => {
         try {
             const success = await deleteData(id);
 
             if (success) {
-                setSelectedNoteId(null); // Désélectionne la note supprimée si elle était sélectionnée
+                setSelectedNoteId(null);
+                const updatedNotes = notes.filter(note => note.id !== id);
+                updateNotes(updatedNotes);
             } else {
                 console.error("La suppression de la note a échoué.");
                 setErrorModalOpen(true);
@@ -89,7 +95,6 @@ export function NotesList({ notes, selectedNoteId, setSelectedNoteId, loading, s
             console.error("Une erreur s'est produite lors de la suppression de la note :", error);
         }
     };
-
     return (
         <>
             {loading ? (

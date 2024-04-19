@@ -16,6 +16,8 @@ function App() {
     const {data, isLoading, error} = useGetRequest(`/notes?_page=${notesPage}&_limit=10`);
 
 
+
+    //  useEffect pour trier les notes par lastUpdatedAt en ordre décroissant
     useEffect(() => {
         if (data) {
             const sortedData = [...data].sort((a, b) => new Date(b.lastUpdatedAt) - new Date(a.lastUpdatedAt));
@@ -26,7 +28,7 @@ function App() {
         }
     }, [data, notesPage]);
 
-
+    // Bouton de création de la note
     const createNote = async () => {
         try {
             const responseData = await postData({title: "Nouvelle note", content: "", lastUpdatedAt: new Date().toISOString(), checked: false, tags: [] });
@@ -42,6 +44,7 @@ function App() {
         }
     };
 
+    // Fonction pour rafraîchir la note (localement)
     const refreshNote = (id, title, content, checked, tags) => {
         const updatedNoteIndex = notes.findIndex(note => note.id === id);
         if (updatedNoteIndex !== -1) {
@@ -57,6 +60,7 @@ function App() {
         }
     };
 
+    // Bouton pour voir plus de notes
     const seeMoreNotes = async () => {
         try {
             setNotes(data);
@@ -69,8 +73,12 @@ function App() {
     }
 
 
-    const selectedNote =
-        notes && notes.find((note) => note.id === selectedNoteId);
+    const updateNotes = (newNotes) => {
+        setNotes(newNotes);
+    };
+
+
+    const selectedNote = notes && notes.find((note) => note.id === selectedNoteId);
 
     return (
         <>
@@ -107,6 +115,7 @@ function App() {
                             loading={isLoading}
                             seeMoreNotes={seeMoreNotes}
                             setErrorModalOpen={setErrorModalOpen}
+                            updateNotes={updateNotes}
                         />
                     </aside>
                     <main className="Main">
